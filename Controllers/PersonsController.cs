@@ -2,6 +2,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PERSONELWEBAPI.Data;
+using PERSONELWEBAPI.Models;
 
 namespace PERSONELWEBAPI.Controllers
 {
@@ -19,13 +20,13 @@ namespace PERSONELWEBAPI.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id) => Json(_context.Persons.FirstOrDefault(p => p.Id == id));
         [HttpPost]
-        public IActionResult Post(Person person)
+        public ApiResponse Post(Person person)
         {
             if (person == null)
-                return NoContent();
+                return new ApiResponse{Code="204",Message="person boş olamaz",Set=null};
             _context.Persons.Add(person);
             _context.SaveChanges();
-            return Ok();
+            return new ApiResponse{Code="200", Message="Başarılı bir şekilde kaydedildi",Set=person};
         }
         [HttpGet]
         [Route("SearchPerson/{searchTerm}")]

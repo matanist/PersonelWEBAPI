@@ -11,6 +11,7 @@ namespace PersonelWEBAPI
 {
     public class Startup
     {
+        readonly string originsConfiguration = "originsConfiguration";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -21,6 +22,12 @@ namespace PersonelWEBAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>{ options.AddPolicy(name: originsConfiguration,
+                builder =>
+                {
+                    builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                });
+            });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -28,7 +35,7 @@ namespace PersonelWEBAPI
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "PersonelWEBAPI", Version = "v1" });
             });
 
-            services.AddDbContext<PersonelDBContext>(option=>
+            services.AddDbContext<PersonelDBContext>(option =>
             {
                 option.UseInMemoryDatabase(databaseName: "PersonelDB");
             });
@@ -45,7 +52,7 @@ namespace PersonelWEBAPI
             }
 
             app.UseHttpsRedirection();
-
+            app.UseCors(originsConfiguration);
             app.UseRouting();
 
             app.UseAuthorization();
