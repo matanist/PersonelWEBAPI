@@ -23,10 +23,19 @@ namespace PERSONELWEBAPI.Controllers
         public ApiResponse Post(Person person)
         {
             if (person == null)
-                return new ApiResponse{Code="204",Message="person boş olamaz",Set=null};
+                return new ApiResponse { Code = "204", Message = "person boş olamaz", Set = null };
             _context.Persons.Add(person);
             _context.SaveChanges();
-            return new ApiResponse{Code="200", Message="Başarılı bir şekilde kaydedildi",Set=person};
+            return new ApiResponse { Code = "200", Message = "Başarılı bir şekilde kaydedildi", Set = person };
+        }
+        [HttpPut]
+        public ApiResponse Put(Person person)
+        {
+            if (person == null)
+                return new ApiResponse { Code = "204", Message = "person boş olamaz", Set = null };
+            _context.Persons.Update(person);
+            _context.SaveChanges();
+            return new ApiResponse{Code="200", Message="Başarılı bir şekilde güncellendi", Set=person};
         }
         [HttpGet]
         [Route("SearchPerson/{searchTerm}")]
